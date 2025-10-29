@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://hg6eu30tdkye"]
+
+[ext_resource type="Script" path="res://GameObj/cards/UpsideDownDeck/upside_down_deck.gd" id="1_n0brr"]
+[ext_resource type="Texture2D" uid="uid://dj3li5ecqpg3i" path="res://GameObj/sprites/cardBack/backCard.png" id="2_yjcpc"]
+
+[node name="UpsideDownDeck" type="Node2D"]
+script = ExtResource("1_n0brr")
+
+[node name="BackCard" type="Sprite2D" parent="."]
+texture = ExtResource("2_yjcpc")

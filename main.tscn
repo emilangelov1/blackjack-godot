@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://c4qtxrft3xy43"]
+
+[ext_resource type="PackedScene" uid="uid://duhl5ri6g6rou" path="res://GameObj/background/background.tscn" id="1_bjysg"]
+[ext_resource type="PackedScene" uid="uid://hg6eu30tdkye" path="res://GameObj/cards/UpsideDownDeck/UpsideDownDeck.tscn" id="2_k4uxx"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Background" parent="." instance=ExtResource("1_bjysg")]
+
+[node name="UpsideDownDeck" parent="Background" instance=ExtResource("2_k4uxx")]
+position = Vector2(159, 56)
