@@ -1,21 +1,18 @@
 extends Node2D
 class_name BaseCard
 
-const CLUB = 0
-const DIAMOND = 1
-const HEART = 2
-const SPADE = 3
+@export var cardData: Dictionary
 
-@export_enum("club", "diamond", "heart", "spade") var color
-@export var cardNumber: int
-@export var sprite: Sprite2D
+var spriteSize: Vector2
 
-var SUIT = {
-	"club": CLUB,
-	"diamond": DIAMOND,
-	"heart": HEART,
-	"spade": SPADE,
+enum SUIT {
+	CLUB,
+	DIAMOND,
+	HEART,
+	SPADE,
 }
 
 func _ready() -> void:
-	$Sprite2D.texture = sprite
+	if cardData.has("sprite"):
+		$Sprite2D.texture = load(cardData["sprite"])
+		spriteSize = $Sprite2D.texture.get_size()

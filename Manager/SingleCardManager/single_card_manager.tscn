@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3 uid="uid://dr4fow2h8uc2b"]
+
+[ext_resource type="Script" path="res://Manager/SingleCardManager/single_card_manager.gd" id="1_jva2t"]
+[ext_resource type="PackedScene" uid="uid://dcihmidkm36p4" path="res://GameObj/cards/BaseCard.tscn" id="2_qix3x"]
+
+[node name="SingleCardManager" type="Node2D"]
+script = ExtResource("1_jva2t")
+baseCard = ExtResource("2_qix3x")

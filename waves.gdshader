@@ -1,8 +1,8 @@
 shader_type canvas_item;
 
-uniform float amplitude : hint_range(0.0, 20.0) = 1.5; // wave height
-uniform float frequency : hint_range(0.0, 10.0) = 15.0; // wave density
-uniform float speed : hint_range(0.0, 10.0) = 0.6;     // wave speed
+uniform float amplitude : hint_range(0.0, 20.0) = 2; // wave height
+uniform float frequency : hint_range(0.0, 10.0) = 10.0; // wave density
+uniform float speed : hint_range(0.0, 10.0) = 0.25;     // wave speed
 
 void fragment() {
     float t = TIME * speed;

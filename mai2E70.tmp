@@ -14,12 +14,6 @@ script = ExtResource("1_18h37")
 [node name="Background" parent="." instance=ExtResource("1_bjysg")]
 
 [node name="Button" parent="Background" instance=ExtResource("7_gh38e")]
-offset_left = 215.0
-offset_top = 120.0
-offset_right = -215.0
-offset_bottom = -119.0
-pivot_offset = Vector2(25, 15)
-text = "Hit"
 
 [node name="GlobalCardManager" parent="Background" instance=ExtResource("2_jehck")]
 
