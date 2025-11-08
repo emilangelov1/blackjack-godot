@@ -9,6 +9,10 @@ func hit():
 	hitSignal.emit()
 
 
+func stand():
+	standSignal.emit()
+
+
 func initDeck(deck: Array[Dictionary]):
 	deck.shuffle()
 	globalDeck = deck
@@ -29,7 +33,8 @@ func removeFromDeck(id: int):
 const FLIP_TIMER = 0.25
 
 
-func flip(card: Node2D, flip: bool = false) -> void:
+func flip(card: Node2D, flip: bool = false) -> Tween:
+	if not is_instance_valid(card): return
 	var tween = create_tween()
 	tween.set_parallel(true)
 	
@@ -56,3 +61,5 @@ func flip(card: Node2D, flip: bool = false) -> void:
 		.set_delay(FLIP_TIMER * 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUINT)
 	tween.tween_property(card, "scale:y", 1.0, FLIP_TIMER * 0.2)\
 		.set_delay(FLIP_TIMER * 0.8).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUINT)
+		
+	return tween

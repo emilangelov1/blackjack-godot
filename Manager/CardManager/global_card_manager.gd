@@ -7,7 +7,7 @@ var idx = 0
 
 var deck: Array[Dictionary]
 
-var SUIT = BaseCard.SUIT
+var FACES = BaseCard.FACES
 
 func getCardValue(cardName: String):
 	var num := ""
@@ -18,7 +18,7 @@ func getCardValue(cardName: String):
 			num += letter
 			#hasNum = true
 			#break
-	for face in SUIT:
+	for face in FACES:
 		if cardName.containsn(face):
 			num = "10"
 	return int(num)
