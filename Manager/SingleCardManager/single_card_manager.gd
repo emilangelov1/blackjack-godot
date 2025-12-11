@@ -11,25 +11,15 @@ var hand: Array[Dictionary] = []
 var cardSpacing: float = 1.1
 var cardWidth: float = 0.0
 
-@onready var scoreText = load('res://GameObj/UI/ScoreText/ScoreText.tscn')
 
 func _ready() -> void:
 	score = 0
 	hand.clear()
-	get_parent().add_child(scoreText)
-	if scoreText:
-		scoreText.text = str(score)
-
-
-func _physics_process(delta: float) -> void:
-	if scoreText:
-		scoreText.text = str(score)
 
 
 func getCardPosition(index: int, cardSize: Vector2, window: Vector2) -> Vector2:
-	var totalWidth = hand.size() * cardSize.x * (cardSpacing - (hand.size() * 0.02))
+	var totalWidth = hand.size() * cardSize.x * (cardSpacing - (hand.size() * 0.015))
 	var startX = (window.x - totalWidth) / 2
-	print(cardSpacing - (hand.size() * 0.05))
 	var xPos = startX + index * (cardSize.x * cardSpacing)
 	
 	if isDealer:
@@ -111,6 +101,7 @@ func revealCard(cardName: String):
 			card.visible = true
 			var flip = Singleton.flip(typedCard, true)
 			await flip.finished
+			updateScore()
 
 
 func updateScore() -> void:
@@ -118,16 +109,47 @@ func updateScore() -> void:
 	var aces = 0
 	if isDealer and score == 17:
 		return
-	for card in hand:
+
+	var children = get_children()
+	for i in range(hand.size()):
+		var card = hand[i]
+
+		# For dealer, only count visible cards
+		if isDealer and i < children.size():
+			var cardNode = children[i]
+			if cardNode is BaseCard and not cardNode.visible:
+				continue
+
 		var cardVal = card['value']
 		if cardVal == 1:
 			aces += 1
 			score += 11
 		else:
 			score += cardVal
+
 	while score > 21 and aces > 0:
 		score -= 10
 		aces -= 1
+
+
+func getFullScore() -> int:
+	# Calculate score for all cards regardless of visibility
+	var fullScore = 0
+	var aces = 0
+
+	for card in hand:
+		var cardVal = card['value']
+		if cardVal == 1:
+			aces += 1
+			fullScore += 11
+		else:
+			fullScore += cardVal
+
+	while fullScore > 21 and aces > 0:
+		fullScore -= 10
+		aces -= 1
+
+	return fullScore
 
 
 func resetHand() -> void:
@@ -188,25 +210,39 @@ func resetHand() -> void:
 		#.set_trans(Tween.TRANS_CIRC).set_ease(Tween.EASE_IN_OUT)
 
 
-func loseAnimation(deck: UpsideDownDeck) -> void:
+func loseAnimation(deck: UpsideDownDeck) -> Tween:
 	var idx = 0
+	var tweens: Array[Tween] = []
+	
 	for card in get_children():
-		var flip = Singleton.flip(card, true)
+		var flip = Singleton.flip(card)
 		await flip.finished
+		
 		var flippedCard = Sprite2D.new()
 		flippedCard.texture = load('res://GameObj/sprites/cardBack/backCard.png')
 		add_child(flippedCard)
 		flippedCard.global_position = card.global_position
+		Singleton.flip(flippedCard, true)
+		
+		var deckLast = deck.get_child(deck.get_child_count() - 1)
 		
 		var tween = create_tween()
+		tweens.append(tween)
 		
 		tween.tween_property(flippedCard, 'global_position',
-		Vector2(randf_range(deck.global_position.x - 0.5, deck.global_position.x + 0.5),
-		randf_range(deck.global_position.y - 0.5, deck.global_position.y + 0.5)), 0.5)\
-		.set_delay(idx * 0.15).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_EXPO)
+			Vector2(
+				deckLast.global_position.x + randf_range(-5, 5),
+				deckLast.global_position.y + idx
+			), 0.5
+		).set_delay(idx * 0.15).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_EXPO)
 		
 		idx += 1
-		
 		card.queue_free()
 	
-	deleteCardOnLost.emit()
+	if not tweens.is_empty():
+		return tweens[-1]
+	else:
+		var dummy_tween = create_tween()
+		dummy_tween.tween_callback(func(): pass)
+		return dummy_tween
+	#deleteCardOnLost.emit()
